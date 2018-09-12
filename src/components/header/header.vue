@@ -38,22 +38,24 @@
             <!-- 内容 -->
             <div class="detail-wrapper clearfix">
                 <div class="detail-main">
-                   <p> {{seller.bulletin}} </p>
-                   <p> {{seller.bulletin}} </p>
+                    <h1 class="name">{{seller.name}}</h1>
+
+                    <star :size="48" :score="4.5"></star>
                 </div>
             </div>
             <!-- 关闭按钮 -->
             <div class="detail-close">
-                <i class="icon-close"></i>
+                <i class="icon-close" @click="closeDetail()"></i>
             </div>
         </div>
     </div>
 </template>
 <script>
+    import star from '../star/star.vue';
     export default {
         data(){
             return{
-                detailShow:false,
+                detailShow:true,
                 classMap:["decrease","discount","special","invoice","guarantee"]
             }
         },
@@ -63,12 +65,18 @@
         methods:{
             showDetail(){
                 this.detailShow = true;
+            },
+            closeDetail(){
+                 this.detailShow = false;
             }
         },
         props:{
             seller:{
                 type: Object
             }
+        },
+        components:{
+            star: star
         }
     }
 </script>
@@ -220,9 +228,16 @@
             left:0;
             .detail-wrapper{
                 min-height:100%;
+                width:100%;
                 .detail-main{
                     margin-top:64px;
                     padding-bottom: 64px;
+                    .name{
+                        line-height:16px;
+                        text-align: center;
+                        font-size: 16px;
+                        font-weight: 700
+                    }
                 }
             }
             .detail-close{
