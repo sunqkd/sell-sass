@@ -34,7 +34,18 @@
         </div>
         <!-- 浮层 -->
         <div v-show="detailShow" class="detail">
-
+            <!-- sticky footer 绝对底部 -->
+            <!-- 内容 -->
+            <div class="detail-wrapper clearfix">
+                <div class="detail-main">
+                   <p> {{seller.bulletin}} </p>
+                   <p> {{seller.bulletin}} </p>
+                </div>
+            </div>
+            <!-- 关闭按钮 -->
+            <div class="detail-close">
+                <i class="icon-close"></i>
+            </div>
         </div>
     </div>
 </template>
@@ -207,6 +218,21 @@
             overflow:auto;
             top:0;
             left:0;
+            .detail-wrapper{
+                min-height:100%;
+                .detail-main{
+                    margin-top:64px;
+                    padding-bottom: 64px;
+                }
+            }
+            .detail-close{
+                position:relative;
+                width:32px;
+                height: 32px;
+                margin:-64px auto 0 auto;
+                clear:both;
+                font-size:32px;
+            }
         }
     }
 </style>
