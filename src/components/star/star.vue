@@ -10,14 +10,12 @@
     const CLS_OFF = 'off'
 
 export default {
-   
-
     data(){
         return{
 
         }
     },
-    props:{
+    props:{ // 接父组件传入的值
         size:{ // 星星的尺寸
             type:Number
         },
@@ -26,27 +24,27 @@ export default {
         }
     },
     computed:{
+        /**
+         * 星星大小 不同位置 星星大小不相同
+        */
         starType(){
             return "star-" + this.size;
         },
         itemClasses(){
             let result = [];
-            let score = Math.floor(this.score*2) / 2;  // 向下取5倍数的值
-            let hasDecimal = score % 1 !==0;  // 是否有半星
+            let score = Math.floor(this.score * 2) / 2;  // 向下取 5倍数的值
+            let hasDecimal = score % 1 !== 0;  // 是否有半星  4.5%1   1*4+ 0.5 !=0
             let integer = Math.floor(score);  // 有多少个全星星
             for(let i=0;i<integer;i++){
                 result.push(CLS_ON); // 全星
             }
-            if(hasDecimal){
+            if(hasDecimal){ // true  存在半星 即余数为0.5
                 result.push(CLS_HALF); // 半星
             }
-
             while(result.length < LENGTH){  // 零颗星
                 result.push(CLS_OFF);
             }
-
             return result;
-
         }
     }
     
@@ -55,13 +53,13 @@ export default {
 <style lang="scss" scoped="" type="text/scss">
     @import "../../common/stylus/mixin";
 
-    .star{
+    .star{ // div
         font-size: 0;
         .star-item{ // span 标签
             display: inline-block;
             background-repeat: no-repeat
         }
-        &.star-48{ // div
+        &.star-48{ // div [多类选择器]
             .star-item{ // span
                 width:20px;
                 height:20px;
@@ -70,13 +68,13 @@ export default {
                 &:last-child{
                     margin-right:0
                 }
-                &.on{
+                &.on{ // span
                     @include bg-image("star48_on")
                 }
-                &.half{
+                &.half{ // span
                     @include bg-image("star48_half")
                 }
-                &.off{
+                &.off{ //span
                     @include bg-image("star48_off")
                 }
             }
