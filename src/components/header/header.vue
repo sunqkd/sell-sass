@@ -251,7 +251,8 @@
             top:0;
             left:0;
             backdrop-filter:blur(10px);
-            &.fade-enter-active, &.fade-leave-active{
+            -webpack-backdrop-filter:blur(10px);
+            &.fade-enter-active, &.fade-leave-active{ // 设置显示消失动画时间
                 transition: all 0.5s
             };
             &.fade-enter, &.fade-leave-active{
