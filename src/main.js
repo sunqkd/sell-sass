@@ -9,11 +9,11 @@ import './common/stylus/index.scss'
 
 Vue.config.productionTip = false
 
-router.beforeEach((to, from,next) => {
-	// console.log(to);
-	// console.log(from);
-	// console.log(next);
-})
+// router.beforeEach((to, from,next) => {
+// 	// console.log(to);
+// 	// console.log(from);
+// 	// console.log(next);
+// })
 
 import axios from 'axios'
 Vue.prototype.$ajax = axios

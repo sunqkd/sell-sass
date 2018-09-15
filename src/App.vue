@@ -34,10 +34,10 @@
 			getSeller() {
 				this.$ajax.get("/apis/seller")
 					.then(response => {
-						console.log(response.data);
+						// console.log(response.data);
 						if (response.data.errno == ERR_OK) {
 							this.seller = response.data.data;
-							console.log(this.seller);
+							// console.log(this.seller);
 						}
 					}).catch(response => {
 						console.log(response);
@@ -58,7 +58,7 @@
 		display: flex;
 		width: 100%;
 		height: 40px;
-		@include border-px;
+		@include border-px(rgba(7,17,27,0.1));
 		.tab-item {
 			height: 40px;
 			line-height: 40px;
