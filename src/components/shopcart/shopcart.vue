@@ -3,14 +3,14 @@
         <div class="content">
             <div class="content-left">
                 <div class="logo-wrapper">
-                    <div class="logo">
-                        <i class="icon-shopping_cart"></i>
+                    <div class="logo" :class="{'heightlight': totalCount > 0 }">
+                        <i class="icon-shopping_cart" :class="{'heightlight': totalCount > 0 }"></i>
                     </div>
-                    <div class="num">
-                        
+                    <div class="num" v-show="totalCount > 0"> <!--上面小标-->
+                        {{totalCount}}
                     </div>
                 </div>
-                <div class="price">
+                <div class="price" :class="{'heightlight': totalPrice > 0 }">
                     ￥{{totalPrice}}
                 </div>
                 <div class="desc">
@@ -18,8 +18,8 @@
                 </div>
             </div>
             <div class="content-right">
-                <div class="pay">
-                   ￥{{minPrice}}元 起送
+                <div class="pay" :class="payClass">
+                   {{payDsc}}
                 </div>
             </div>
         </div>
@@ -40,19 +40,41 @@ export default {
             });
             return total;
         },
-        totalCount(){
+        totalCount(){ // 总数量
             let count = 0;
             this.selectfood.forEach((food) => {
                 count+= food.count;
             })
             return count;
+        },
+        payDsc(){ // 计算差价
+            if(this.totalPrice === 0 ){ // 多少元起送
+                return `￥${this.minPrice}元起送`;
+            }else if(this.totalPrice < this.minPrice){
+                let diff = this.minPrice - this.totalPrice;
+                return `还差 ￥${diff}元起送`;
+            }else{
+                return `去结算`
+            }
+        },
+        payClass(){ // 去结算样式
+            if(this.totalPrice < this.minPrice){
+                return `not-enough`
+            }else{
+                return `enough`
+            }
         }
     },
     props:{
-        selectfood:{
+        selectfood:{ // 传过来的商品
             type:Array,
             default(){
-                return [];
+                return [
+                    {
+                        price:10,
+                        count:1
+                    }
+                ];
             }
         },
         deliveryPrice:{ // 配送
@@ -98,11 +120,33 @@ export default {
                         border-radius: 50%;
                         background:#2b343c;
                         text-align: center;
+                        &.heightlight{
+                            background: rgb(0,160,220);
+                        }
                         .icon-shopping_cart{
                             color:#80858a;
                             font-size:24px;
                             line-height: 44px;
+                            &.heightlight{
+                                color:#fff;
+
+                            }
                         }
+                    }
+                    .num{
+                        position: absolute;
+                        top:0;
+                        right: 0;
+                        width: 24px;
+                        height: 16px;
+                        line-height: 16px;
+                        text-align: center;
+                        border-radius: 16px;
+                        font-size: 9px;
+                        font-weight: 700;
+                        color:#fff;
+                        background: rgb(240,20,20);
+                        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
                     }
                 }
                 .price{
@@ -116,6 +160,9 @@ export default {
                     border-right: 1px solid rgba(255,255,255,0.1);
                     font-size: 16px;
                     font-weight: 700;
+                    &.heightlight{
+                        color:#fff;
+                    }
                 }
                 .desc{
                     display: inline-block;
@@ -138,6 +185,13 @@ export default {
                     color:rgba(255,255,255,0.4);
                     font-weight: 700;
                     background: #2b333b;
+                    &.not-enough{
+                        background:#2b333b;
+                    }
+                    &.enough{
+                        background: #00b43c;
+                        color:#fff;
+                    }
                 }
             }
         }
