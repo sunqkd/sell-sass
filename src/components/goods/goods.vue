@@ -31,6 +31,10 @@
                                 <div class="price">
                                     <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                                 </div>
+                                <!-- 控制按钮加减号 -->
+                                <div class="cartcontrol-wrapper">
+                                    <cartcontrol :food = "food"></cartcontrol>
+                                </div>
                             </div> 
                         </li>
                     </ul>
@@ -38,13 +42,14 @@
             </ul>
         </div>
         <!-- 购物车 -->
-        <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+        <shopcart :selectfood = "selectfood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
 </template>
 <script>
 const ERROR_OK = 0;
 import BScroll from 'better-scroll';
-import shopcart from '../shopcart/shopcart.vue';
+import shopcart from '../shopcart/shopcart.vue';  // 购物车
+import cartcontrol from '../cartcontrol/cartcontrol.vue'; // 控制按钮
 export default {
     data(){
         return {
@@ -67,6 +72,17 @@ export default {
                 }
             }
             return 0;
+        },
+        selectfood(){
+            let foods = [];
+            this.goods.forEach( (good) => {
+                good.foods.forEach( (food)=>{
+                    if(food.count){
+                        foods.push(food);
+                    }
+                })
+            });
+            return foods;
         }
     },
     mounted(){
@@ -93,6 +109,7 @@ export default {
                 click:true
             });
             this.foodScroll = new BScroll(this.$refs.foodsWrapper,{ 
+                click:true, // 点击事件生效（购买增加商品）
                 probeType: 3 // 配置项 监听位置
             })
 
@@ -123,7 +140,8 @@ export default {
         }
     },
     components:{
-        shopcart:shopcart
+        shopcart:shopcart,
+        cartcontrol:cartcontrol
     },
     props:{
         seller:{
@@ -255,6 +273,11 @@ export default {
                             font-size:10px;
                             color:rgb(147, 153, 159);
                         }
+                    }
+                    .cartcontrol-wrapper{
+                        position:absolute;
+                        right:0;
+                        bottom:12px;
                     }
                 }
             }
