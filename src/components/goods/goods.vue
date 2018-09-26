@@ -33,7 +33,7 @@
                                 </div>
                                 <!-- 控制按钮加减号 -->
                                 <div class="cartcontrol-wrapper">
-                                    <cartcontrol :food = "food"></cartcontrol>
+                                    <cartcontrol :food = "food" @add="addFood"></cartcontrol>
                                 </div>
                             </div> 
                         </li>
@@ -42,7 +42,7 @@
             </ul>
         </div>
         <!-- 购物车 -->
-        <shopcart :selectfood = "selectfood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+        <shopcart ref="shopcart" :selectfood = "selectfood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
 </template>
 <script>
@@ -137,6 +137,18 @@ export default {
             let foodList = this.$refs.foodsWrapper.getElementsByClassName("food-list-hook");
             let el = foodList[index];
             this.foodScroll.scrollToElement(el,300);
+        },
+
+        addFood(target){
+            // target 为点击的加号节点
+            // console.log(target)
+            this._drop(target);
+        },
+        _drop(target){ // 下落动画函数(传入节点)
+            // 体验优化，异步执行下落动画
+            this.$nextTick( () => {
+                this.$refs.shopcart.drop(target);
+            })
         }
     },
     components:{

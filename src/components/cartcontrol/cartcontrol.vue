@@ -10,7 +10,7 @@
             {{food.count}}
         </div>
         <!-- 加号 -->
-        <div class="cart-add icon-add_circle" @click="addCart()">
+        <div class="cart-add icon-add_circle" @click="addCart($event)">
             
         </div>
     </div>
@@ -28,7 +28,7 @@ export default {
         // console.log(this.food)
     },
     methods:{
-        addCart(){ // 增加商品
+        addCart(event){ // 增加商品
            // console.log("click");
             // if(!event._constructed){ // 不是自己派发的，浏览器无_constructed属性，防止多次触发(此处不用禁用)
             //     return;
@@ -47,6 +47,8 @@ export default {
                 this.food.count++;
             }
 
+            // 派发一个事件
+            this.$emit('add',event.target);
         },
         decreaseCart(){ // 减少商品
             if(this.food.count){
