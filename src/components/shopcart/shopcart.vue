@@ -33,9 +33,32 @@
                 </transition>
             </div>
         </div>
+        <!-- 购物车详情 -->
+        <div class="shopcart-list" v-show="listShow">
+            <div class="list-header">
+                <h1 class="title">购物车</h1>
+                <span class="empty">清空</span>
+            </div>
+            <div class="list-content">
+                <ul>
+                    <li class="food" v-for="(food,index) in selectfood" :key="index">
+                        <span class="name">{{food.name}}</span>
+                        <div class="price">
+                            <span>￥{{food.price * food.count}}</span>
+                        </div>
+                        <div class="cartcontrol-wrapper">
+                            <cartcontrol :food="food"></cartcontrol>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+
+import cartcontrol from '../cartcontrol/cartcontrol.vue'; // 控制按钮
+
 export default {
     data(){
         return {
@@ -52,11 +75,14 @@ export default {
                     show:false
                 }
             ], // 存放小球
-            dropBalls:[]  // 存放下落的小球
+            dropBalls:[],  // 存放下落的小球
+            listShow:true, // 购物车详情
+
         }
     },
     methods:{
-        drop(el) {
+        drop(el) {  // 拿到balls中show为 false的一个元素
+            // console.log(el); // el 为点击的节点
             for(let i=0;i<this.balls.length;i++){
                 let ball = this.balls[i];
                 if(ball.show == false){
@@ -66,33 +92,35 @@ export default {
                     return;
                 }
             };
-
-
         },
-        beforeDrop(el){ // el 为小球 
+        // 钩子函数
+        beforeDrop(el){ // el 为小球 （开始位置）
             let count = this.balls.length;
             while(count--){
                 let ball = this.balls[count];
                 if(ball.show){ // 需要运动的小球
+                    // console.log(ball)
                     let rect = ball.el.getBoundingClientRect(); // 返回元素的大小及其相对于视口的位置
                     let x = rect.left - 32; // 正值
                     let y = -(window.innerHeight - rect.top - 22);// y 差值
+                    // console.log(x,y);
                     el.style.display = '';
-                    el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+                    el.style.webkitTransform = `translate3d(0,${y}px,0)`; // y轴上移
                     el.style.transform = `translate3d(0,${y}px,0)`; // 外层元素做纵向动画
 
                     let inner = el.getElementsByClassName("inner-hook")[0];
-                    inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+                    inner.style.webkitTransform = `translate3d(${x}px,0,0)`; // x轴左移
                     inner.style.transform = `translate3d(${x}px,0,0)`;
 
                 }
 
             }
         },
-        dropping(el){
+        dropping(el){ // 动画状态
             /**浏览器重绘*/
             let rf = el.offsetHeight; // 获取元素的属性会触发重绘
             this.$nextTick( () => {
+                // 重置回来
                 el.style.webkitTransform = `translate3d(0,0px,0)`;
                 el.style.transform = `translate3d(0,0px,0)`; // 外层元素做纵向动画
                 let inner = el.getElementsByClassName("inner-hook")[0];
@@ -101,12 +129,14 @@ export default {
             })
         },
         afterDrop(el){
-            let ball = this.dropBalls.shift(); // 第一个元素(删除)
+            // console.log(this.balls);
+            let ball = this.dropBalls.shift(); // 第一个元素(删除) 并返回第一个元素的值
+            //  console.log(this.dropBalls);
             if(ball){
                 ball.show = false;
             }
+            // console.log(this.balls);
             el.style.display = 'none';
-
         }
     },
     computed:{
@@ -162,6 +192,9 @@ export default {
             type:Number,
             default:0
         }
+    },
+    components:{
+        "cartcontrol":cartcontrol
     }
 }
 </script>
@@ -278,16 +311,17 @@ export default {
                 left:32px;
                 bottom:22px;
                 z-index:200;
-                transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41); // 抛物线 cubic-bezier（贝塞尔曲线）
+                transition: all 1s cubic-bezier(0.49, -0.29, 0.75, 0.41); // 抛物线 cubic-bezier（贝塞尔曲线）
                 background: pink;
                 .inner{
                     width:16px;
                     height: 16px;
                     border-radius: 50%;
                     background: rgb(0,160,220);
-                    transition: all 0.4s linear;
+                    transition: all 1s linear;
                 }
             }
         }
+
     }
 </style>

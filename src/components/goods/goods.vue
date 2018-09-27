@@ -152,8 +152,8 @@ export default {
         }
     },
     components:{
-        shopcart:shopcart,
-        cartcontrol:cartcontrol
+        "shopcart":shopcart,
+        "cartcontrol":cartcontrol
     },
     props:{
         seller:{
