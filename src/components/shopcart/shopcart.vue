@@ -49,7 +49,7 @@
                                     <span>￥{{food.price * food.count}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper">
-                                    <cartcontrol :food = "food"></cartcontrol>
+                                    <cartcontrol :food = "food" @add="addFood($event)"></cartcontrol>
                                 </div>
                             </li>
                         </ul>
@@ -168,6 +168,9 @@ export default {
             }else{
                 alert(`支付 ${this.totalPrice}元`)
             }
+        },
+        addFood(target){
+            this.drop(target)
         }
     },
     computed:{
