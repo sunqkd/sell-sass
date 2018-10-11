@@ -170,7 +170,7 @@ export default {
             }
         },
         addFood(target){
-            this.drop(target)
+            this.drop(target);
         }
     },
     computed:{
