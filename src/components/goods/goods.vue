@@ -16,7 +16,7 @@
                 <li v-for="(item,index) in goods" :key="index" class="food-list food-list-hook">
                     <h1 class="title">{{item.name}}</h1>
                     <ul>
-                        <li v-for="(food,index) in item.foods" :key="index" class="food-item border-1px">
+                        <li v-for="(food,index) in item.foods" :key="index" class="food-item border-1px" @click="selectFood_Detail(food,$event)">
                             <!-- 左侧图片-->
                             <div class="icon">
                                 <img width="57" height="57" :src="food.icon" alt="">
@@ -43,6 +43,8 @@
         </div>
         <!-- 购物车 -->
         <shopcart ref="shopcart" :selectfood = "selectfood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+        <!-- 商品详情页 -->
+        <food :food="selectFoodDetail" ref="food"></food>
     </div>
 </template>
 <script>
@@ -50,6 +52,8 @@ const ERROR_OK = 0;
 import BScroll from 'better-scroll';
 import shopcart from '../shopcart/shopcart.vue';  // 购物车
 import cartcontrol from '../cartcontrol/cartcontrol.vue'; // 控制按钮
+import food from '../food/food.vue'; // 商品详情界面
+
 export default {
     data(){
         return {
@@ -57,6 +61,7 @@ export default {
             listHeight:[], // 区块高度
             classMap:["decrease","discount","special","invoice","guarantee"],
             scrollY: 0, // 右侧y轴值
+            selectFoodDetail:{} // 选中的商品 用于商品详情
         }
     },
     created(){
@@ -149,11 +154,16 @@ export default {
             this.$nextTick( () => {
                 this.$refs.shopcart.drop(target);
             })
+        },
+        selectFood_Detail(food,event){ // 用于详情页
+            this.selectFoodDetail = food;
+            this.$refs.food.show(); // 详情页面显示
         }
     },
     components:{
-        "shopcart":shopcart,
-        "cartcontrol":cartcontrol
+        "shopcart":shopcart, // 购物车
+        "cartcontrol":cartcontrol, // 控制按钮
+        "food":food // 商品详情页
     },
     props:{
         seller:{
