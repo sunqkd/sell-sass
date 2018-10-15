@@ -44,7 +44,7 @@
         <!-- 购物车 -->
         <shopcart ref="shopcart" :selectfood = "selectfood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
         <!-- 商品详情页 -->
-        <food :food="selectFoodDetail" ref="food"></food>
+        <food :food="selectFoodDetail" ref="food" @addDetail="addFood"></food>
     </div>
 </template>
 <script>
