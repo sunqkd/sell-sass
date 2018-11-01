@@ -39,7 +39,7 @@
 
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-
+                    <ratingselect @onlyContentchange="onlyContentSelect"  @ratingtypechange="ratingtypeSelect" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
                 </div>
             </div>
         </div>
@@ -50,6 +50,12 @@ import BScroll from 'better-scroll';
 import cartcontrol from '../cartcontrol/cartcontrol.vue';
 import Vue from 'vue';
 import split from '../split/split.vue';
+import ratingselect from '../ratingselect/ratingselect.vue'; // 评价模块组件
+
+
+const POSITIVE = 0;
+const NEGATIVE = 1;
+const ALL = 2;
 
 export default {
     props:{
@@ -58,14 +64,20 @@ export default {
         }
     },
     data() {
-        return {
-            showFlag: false
+        return { 
+            showFlag: false,
+            selectType: ALL, // 默认为全部
+            onlyContent: true, // 只看内容
+            desc:{
+                all: "全部",
+                positive: "推荐",
+                negative: "吐槽"
+            }
         }
     },
     methods:{
         show(){ // 父组件调用子组件的方法
             this.showFlag = true; // 详情页显示
-
             this.$nextTick(() =>{ // 保证组件被渲染 高度可以计算
                 if(!this.scroll){
                     this.scroll = new BScroll(this.$refs.food,{
@@ -74,7 +86,10 @@ export default {
                 }else{
                     this.scroll.refresh();
                 }
-            })
+            });
+            // 详情页弹出后
+            this.selectType = ALL; // 初始化 高亮第一个
+            this.onlyContent = true; // 初始化  是否只看有内容的评论
 
         },
         hide(){
@@ -83,11 +98,24 @@ export default {
         addFirst(event){ // 添加第一个尚品
             Vue.set(this.food,'count',1);
             this.$emit('addDetail',event.target);
+        },
+        ratingtypeSelect(type){  // 子组件的派发事件
+            this.selectType = type;
+            this.$nextTick(() => {
+                this.scroll.refresh();
+            });
+        },
+        onlyContentSelect(onlyContent){ // 子组件的派发事件
+            this.onlyContent = !this.onlyContent
+            this.$nextTick(() => {
+                this.scroll.refresh();
+            });
         }
     },
     components:{
         "cartcontrol":cartcontrol,
-        "split":split
+        "split":split,
+        "ratingselect":ratingselect
     }
 };
 </script>
@@ -208,6 +236,15 @@ export default {
                 padding:0 8px;
                 font-size: 12px;
                 color:rgb(77,85,93);
+            }
+        }
+        .rating{
+            padding-top:18px;
+            .title{
+                line-height: 14px;
+                margin-left:18px;
+                font-size: 14px;
+                color:rgb(7,17,27);
             }
         }
     }
