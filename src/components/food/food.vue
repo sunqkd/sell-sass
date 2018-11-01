@@ -51,7 +51,7 @@
                                 </div>
                                 <!-- 评价时间 -->
                                 <div class="time">
-                                    {{item.rateTime}}
+                                    {{item.rateTime | formaDate}}
                                 </div>
                                 <!-- 评论内容 -->
                                 <p class="text">
@@ -75,7 +75,7 @@ import cartcontrol from '../cartcontrol/cartcontrol.vue';
 import Vue from 'vue';
 import split from '../split/split.vue';
 import ratingselect from '../ratingselect/ratingselect.vue'; // 评价模块组件
-
+import { formaDateTransform } from '../../common/js/date';// 引入方法
 
 const POSITIVE = 0;
 const NEGATIVE = 1;
@@ -125,12 +125,16 @@ export default {
         },
         ratingtypeSelect(type){  // 子组件的派发事件
             this.selectType = type;
+            // 重新计算高度
+            
+            // vue改变数据的时候 vue的dom更新是异步的  会放在一个更新队列里面 当下一个时间周期 
             this.$nextTick(() => {
                 this.scroll.refresh();
             });
         },
         onlyContentSelect(onlyContent){ // 子组件的派发事件
             this.onlyContent = !this.onlyContent
+            // 重新计算高度  
             this.$nextTick(() => {
                 this.scroll.refresh();
             });
@@ -144,6 +148,12 @@ export default {
             }else{
                 return type === this.selectType;
             }
+        }
+    },
+    filters:{
+        formaDate(time){
+            let date = new Date(time);
+            return formaDateTransform(date,'yyyy-MM-dd hh:mm');
         }
     },
     components:{
@@ -326,6 +336,11 @@ export default {
                             color:rgb(147,153,159);
                         }
                     }
+                }
+                .no-rating{
+                    padding: 16px 0;
+                    font-size: 12px;
+                    color:rgb(147,153,159);
                 }
             }
         }
