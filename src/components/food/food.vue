@@ -40,6 +40,30 @@
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
                     <ratingselect @onlyContentchange="onlyContentSelect"  @ratingtypechange="ratingtypeSelect" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+                    <!-- 评价列表 -->
+                    <div class="rating-wrapper">
+                        <ul v-show="food.ratings && food.ratings.length">
+                            <li v-show="needShow(item.rateType,item.text)" v-for="(item,index) in food.ratings" :key="index" class="rating-item border-1px">
+                                <div class="user">
+                                    <!-- 用户名 -->
+                                    <span class="name">{{item.username}}</span>
+                                    <img  class="avatar" alt="用户头像" width="12" height="12" :src="item.avatar">
+                                </div>
+                                <!-- 评价时间 -->
+                                <div class="time">
+                                    {{item.rateTime}}
+                                </div>
+                                <!-- 评论内容 -->
+                                <p class="text">
+                                    <span :class = "{'icon-thumb_up': item.rateType === 0 ,'icon-thumb_down': item.rateType === 1 }"></span>
+                                    {{item.text}}
+                                </p>
+                            </li>
+                        </ul>
+                        <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
+                            暂无评价
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,6 +134,16 @@ export default {
             this.$nextTick(() => {
                 this.scroll.refresh();
             });
+        },
+        needShow(type,text){ // v-show 绑定函数返回值
+            if(this.onlyContent && !text){
+                return false;
+            }
+            if(this.selectType === ALL){
+                return true;
+            }else{
+                return type === this.selectType;
+            }
         }
     },
     components:{
@@ -120,6 +154,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped="" type="text/scss">
+    @import "../../common/stylus/mixin";
     .food{
         position:fixed;
         left:0;
@@ -245,6 +280,53 @@ export default {
                 margin-left:18px;
                 font-size: 14px;
                 color:rgb(7,17,27);
+            }
+            .rating-wrapper{
+                padding: 0 18px;
+                .rating-item{
+                    position: relative;
+                    padding: 16px 0;
+                    @include border-px(rgba(7,17,27,0.1));
+                    .user{
+                        position:absolute;
+                        right:0;
+                        top:16px;
+                        font-size: 0;
+                        line-height:12px;
+                        .name{
+                            display:inline-block;
+                            font-size:10px;
+                            color:rgb(147,153,159);
+                            vertical-align: top;
+                            margin-right: 6px;
+                        }
+                        .avatar{
+                            border-radius: 50%;
+                        }
+                    }
+                    .time{
+                        margin-bottom:6px;
+                        line-height: 12px;
+                        font-size:10px;
+                        color:rgb(147,153,159);
+                    }
+                    .text{
+                        line-height: 16px;
+                        font-size:12px;
+                        color:rgb(7,17,27);
+                        .icon-thumb_up, .icon-thumb_down{
+                            line-height: 16px;
+                            margin-right:4px;
+                            font-size:12px;
+                        }
+                        .icon-thumb_up{
+                            color:rgb(0,160,220);
+                        }
+                        .icon-thumb_down{
+                            color:rgb(147,153,159);
+                        }
+                    }
+                }
             }
         }
     }

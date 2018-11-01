@@ -1,14 +1,14 @@
 <template>
     <div class="ratingselect">
-        <div class="rating-type">
+        <div class="rating-type border-1px">
             <span class="block positive" @click="select(2,$event)" :class="{'active':selectType == 2}">
                 {{desc.all}}<span class="count">{{ratings.length}}</span>
             </span>
             <span  @click="select(0,$event)"  class="block positive" :class="{'active':selectType == 0}">
-                {{desc.positive}}<span class="count">40</span>
+                {{desc.positive}}<span class="count">{{positives.length}}</span>
             </span>
             <span  @click="select(1,$event)"  class="block negative" :class="{'active':selectType == 1}">
-                {{desc.negative}}<span class="count">7</span>
+                {{desc.negative}}<span class="count">{{negatives.length}}</span>
             </span>
         </div>
         <div class="switch" :class="{'on':onlyContent == true}" @click="toggleContent($event)">
@@ -56,12 +56,15 @@ export default {
     },
     computed:{ // 计算属性
         positives(){ // 正向评价数组
-            return this.ratings.filter( () => {
-
+            // 返回 正向评价数组 
+            return this.ratings.filter( (item) => {
+                return item.rateType === POSITIVE;
             })
         },
         negatives(){ // 负面评价数组
-
+            return this.ratings.filter( (item) => {
+                return item.rateType === NEGATIVE;
+            })
         }
     },
     methods:{
