@@ -154,7 +154,7 @@ export default {
         formaDate(time){ // 时间戳 改成固定格式
             let date = new Date(time);
             // console.log(date);  // Sat Jul 23 2016 21:52:44 GMT+0800 (中国标准时间)
-            return formaDateTransform(date,'yyyy-MM-dd hh:mm');
+            return formaDateTransform(date,'yyyy-MM-dd hh:mm'); // 日期白名单
         }
     },
     components:{
