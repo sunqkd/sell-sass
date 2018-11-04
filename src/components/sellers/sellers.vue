@@ -30,6 +30,10 @@
                         </div>
                     </li>
                 </ul>
+                <div class="favorite" @click="toggleFavorite($event)">
+                    <span class="icon-favorite" :class="{'active':favorite}"></span>
+                    <span class="text">{{favoriteText}}</span>
+                </div>
             </div>
             <split></split>
             <div class="bulletin">
@@ -57,6 +61,15 @@
                     </ul>
                 </div>
             </div>
+            <split></split>
+            <div class="info">
+                <h1 class="title border-1px">商家信息</h1>
+                <ul>
+                    <li class="info-item border-1px" v-for="(item,index) in seller.infos" :key="index">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -67,7 +80,13 @@ import BScroll from 'better-scroll';
 export default {
     data(){
         return{
-            classMap:["decrease","discount","special","invoice","guarantee"]
+            classMap:["decrease","discount","special","invoice","guarantee"],
+            favorite: false
+        }
+    },
+    computed:{
+        favoriteText(){
+            return this.favorite? '已收藏':'收藏';
         }
     },
     watch:{ // 监听值得变化
@@ -111,6 +130,12 @@ export default {
 
                 });
             }
+        },
+        toggleFavorite(even){  // 收藏
+            if(!even._constructed){
+                return;
+            };
+            this.favorite = !this.favorite;
         }
     },
     props:{
@@ -135,6 +160,7 @@ export default {
         overflow: hidden;
         .overview{
             padding:18px;
+            position:relative;
             .title{
                 margin-bottom:8px;
                 line-height:14px;
@@ -185,7 +211,28 @@ export default {
                     }
                 }
             }
-
+            .favorite{
+                position:absolute;
+                width: 50px;
+                right: 11px;
+                top:18px;
+                text-align: center;
+                .icon-favorite{
+                    display:block;
+                    margin-bottom: 4px;
+                    color:#d4d6d9;
+                    line-height: 24px;
+                    font-size: 24px;
+                    &.active{
+                        color:rgb(240,20,20);
+                    }
+                }
+                .text{
+                    line-height: 10px;
+                    font-size: 10px;
+                    color:rgb(77,85,93);
+                }
+            }
         }
         .bulletin{
             padding:18px 18px 0 18px;
@@ -268,6 +315,26 @@ export default {
                             margin:0;
                         }
                     }
+                }
+            }
+        }
+        .info{
+            padding: 18px 18px 0 18px;
+            .title{
+                padding-bottom:12px;
+                line-height: 14px;
+                color:rgb(7,17,27);
+                font-size: 14px;
+                @include border-px(rgba(7,17,27,0.1));
+            }
+            .info-item{
+                padding: 16px 12px;
+                line-height: 16px;
+                @include border-px(rgba(7,17,27,0.1));
+                color:rgb(7,17,27);
+                font-size: 12px;
+                &:last-child{
+                    @include border-none()
                 }
             }
         }

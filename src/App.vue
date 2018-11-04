@@ -19,16 +19,23 @@
 
 <script>
 	import Header from "./components/header/header";
+	import {urlParse} from './common/js/util.js';
 	const ERR_OK = 0;
 	export default {
 		//   name: "App",
 		data() {
 			return {
-				seller: {}
+				seller: {
+					id:(()=>{
+						let queryParm = urlParse();
+						return queryParm;
+					})()
+				}
 			};
 		},
 		created() {
 			this.getSeller();
+			this.ad()
 		},
 		methods: {
 			getSeller() {
@@ -36,12 +43,16 @@
 					.then(response => {
 						// console.log(response.data);
 						if (response.data.errno == ERR_OK) {
-							this.seller = response.data.data;
+							// this.seller = response.data.data;
+							this.seller = Object.assign({}, this.seller, response.data.data);
 							// console.log(this.seller);
 						}
 					}).catch(response => {
 						console.log(response);
 					});
+			},
+			ad(){
+				urlParse();
 			}
 		},
 		components: {
