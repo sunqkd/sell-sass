@@ -33,10 +33,10 @@
             <!-- 分割线 -->
             <split></split>
 
-            <ratingselect :select-type="selectType" :only-content="onlyContent" :ratings="ratings"></ratingselect>
+            <ratingselect @ratingtypechange="typeChangeR" @onlyContentchange="contentChangeR" :select-type="selectType" :only-content="onlyContent" :ratings="ratings"></ratingselect>
             <div class="rating-wrapper">
                 <ul>
-                    <li v-for="(item,index) in ratings" :key="index" class="rating-item border-1px">
+                    <li v-for="(item,index) in ratings" :key="index" class="rating-item border-1px" v-show="needShow(item.rateType,item.text)">
                         <div class="avatar">
                             <img width="28" height="28" :src="item.avatar" />
                         </div>
@@ -103,6 +103,28 @@ export default {
             }).catch( (response)=>{
                 console.log(response);
             })
+        },
+        typeChangeR(type){ // 子组件派发事件
+            this.selectType = type;
+            this.$nextTick(() => {
+                this.scroll.refresh();
+            })
+        },
+        contentChangeR(onlyContent){ // 子组件派发事件
+            this.onlyContent = !onlyContent;
+            this.$nextTick(() => {
+                this.scroll.refresh();
+            })
+        },
+        needShow(type,text){
+            if(this.onlyContent && !text){
+                return false;
+            }
+            if(this.selectType === ALL){
+                return true;
+            }else{
+                return type === this.selectType;
+            }
         }
     },
     filters:{ // 过滤器
@@ -273,6 +295,14 @@ export default {
                             color:rgb(147,153,159);
                             background: #fff;
                         }
+                    }
+                    .time{
+                        position:absolute;
+                        top:0;
+                        right:0;
+                        line-height: 12px;
+                        font-size:10px;
+                        color:rgb(147,153,159);
                     }
                 }
             }
