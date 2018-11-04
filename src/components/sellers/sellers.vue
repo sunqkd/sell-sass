@@ -49,8 +49,8 @@
             <split></split>
             <div class="pics">
                 <h1 class="title">商家实景</h1>
-                <div class="pic-wrapper">
-                    <ul class="pic-list">
+                <div class="pic-wrapper" ref="picwrapper">
+                    <ul class="pic-list"  ref="picUl">
                         <li class="pic-item" v-for="(item,index) in seller.pics" :key="index">
                             <img :src="item" alt="" width="120" height="90"/>
                         </li>
@@ -71,14 +71,14 @@ export default {
         }
     },
     watch:{ // 监听值得变化
-        seller(){
+        seller(){ //检测seller变化
             this._initScroll();
+            this._initPic();
         }
     },
     mounted(){ // dom 结构渲染完成
-        this.scroll = new BScroll(this.$refs.seller,{
-            click:true
-        })
+       this._initScroll();  // 切换 seller没有发生变化
+       this._initPic();
     },
     methods:{
         _initScroll(){
@@ -88,6 +88,28 @@ export default {
                 })
             }else{
                 this.scroll.refresh();
+            }
+        },
+        _initPic(){
+        // 图片横向滚动
+            if(this.seller.pics){
+                // 对ul设置宽度
+                let picWidth = 120;
+                let margin = 6;
+                let width = (picWidth + margin) * this.seller.pics.length - margin;  // ul 的宽度
+                this.$refs.picUl.style.width = width + 'px';
+                this.$nextTick(()=>{
+
+                    if(!this.picScroll){
+                        this.picScroll = new BScroll(this.$refs.picwrapper,{
+                            scrollX:true,
+                            eventPassthrough:'vertical'  // 滚动嵌套  横向滚动的时候忽略垂直方向的滚动
+                        })
+                    }else{
+                        this.picScroll.refresh();
+                    }
+
+                });
             }
         }
     },
@@ -224,7 +246,30 @@ export default {
             }
         }
         .pics{
-            
+            padding: 18px;
+            .title{
+                margin-bottom:12px;
+                line-height: 14px;
+                color:rgb(7,17,27);
+                font-size: 14px;
+            }
+            .pic-wrapper{
+                width:100%;
+                overflow:hidden;
+                white-space: nowrap; // 图片超出宽度的时候不会被折行
+                .pic-list{ // ul
+                    font-size: 0;
+                    .pic-item{ // li
+                        display: inline-block;
+                        margin-right: 6px;
+                        width:120px;
+                        height:90px;
+                        &:last-child{
+                            margin:0;
+                        }
+                    }
+                }
+            }
         }
     }
 </style>
