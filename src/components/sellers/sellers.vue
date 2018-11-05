@@ -77,11 +77,15 @@
 import star from '../star/star.vue';
 import split from '../split/split.vue';
 import BScroll from 'better-scroll';
+import {saveToLocal,loadFromLocal} from '../../common/js/store.js';
 export default {
     data(){
         return{
             classMap:["decrease","discount","special","invoice","guarantee"],
-            favorite: false
+            // favorite: false  // 应该从本地缓存去读
+            favorite: (()=>{
+               return loadFromLocal(this.seller.id,'favorite',false);
+            })()
         }
     },
     computed:{
@@ -132,11 +136,15 @@ export default {
             }
         },
         toggleFavorite(even){  // 收藏
+            // 点选收藏按钮 要做本地缓存处理
             if(!even._constructed){
                 return;
             };
             this.favorite = !this.favorite;
-        }
+            // console.log(this.seller.id);
+            saveToLocal(this.seller.id,'favorite',this.favorite);
+            // localStorage.favorite = this.favorite;
+        },
     },
     props:{
         seller:{

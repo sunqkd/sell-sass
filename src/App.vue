@@ -13,7 +13,10 @@
 				<router-link to="/sellers">商家</router-link>
 			</div>
 		</div>
-		<router-view :seller="seller"></router-view>
+		<!-- 保留状态 -->
+		<keep-alive>
+			<router-view :seller="seller"></router-view>
+		</keep-alive>
 	</div>
 </template>
 
@@ -28,7 +31,8 @@
 				seller: {
 					id:(()=>{
 						let queryParm = urlParse();
-						return queryParm;
+						// console.log(queryParm.id); // 拿到 id 值 
+						return queryParm.id;
 					})()
 				}
 			};
@@ -39,13 +43,14 @@
 		},
 		methods: {
 			getSeller() {
-				this.$ajax.get("/apis/seller")
+				this.$ajax.get("/apis/seller?id="+ this.seller.id)  // 拼接请求路径 （当然这里是假的）
 					.then(response => {
 						// console.log(response.data);
 						if (response.data.errno == ERR_OK) {
 							// this.seller = response.data.data;
-							this.seller = Object.assign({}, this.seller, response.data.data);
-							// console.log(this.seller);
+							// Object.assign 合并对象 一共三个参数
+							this.seller = Object.assign({}, this.seller, response.data.data);  // 合并对象
+							
 						}
 					}).catch(response => {
 						console.log(response);

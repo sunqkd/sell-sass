@@ -19,6 +19,6 @@ export function urlParse(){
             obj[key] = val;
         });
     }
-    console.log(obj);
+    // console.log(obj); //{id:123123,a:b}
     return obj;
 }
